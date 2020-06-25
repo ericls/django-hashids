@@ -47,7 +47,7 @@ TestModel.objects.filter(hashid__in=TestModel.objects.values("hashids"))
 
 `DJANGO_HASHIDS_SALT` can be set in Django's settinigs to be used as the default salt.
 
-`HashidsField` does not reqiure any arguments but the followinig arguments can be supplied to modify its behavior
+`HashidsField` does not reqiure any arguments but the followinig arguments can be supplied to modify its behavior.
 
 | Name               |                        Description                        |
 | ------------------ | :-------------------------------------------------------: |
@@ -58,3 +58,5 @@ TestModel.objects.filter(hashid__in=TestModel.objects.values("hashids"))
 | `alphabet`         |    The alphabet used by this field to generate hashids    |
 
 The argument `hashids_instance` is mutually exclusive to `salt`, `min_length` and `alphabet`. See [hashids-python](https://github.com/davidaurelio/hashids-python) for more info about the arguments.
+
+Some common Model arguments such as `verbose_name` are also supported.
