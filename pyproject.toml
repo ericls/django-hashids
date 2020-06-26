@@ -1,12 +1,13 @@
 [tool.poetry]
 name = "django-hashids"
-version = "0.1.0"
+version = "0.1.2"
+readme = "README.md"
 description = "Non-intrusive hashids library Django"
 authors = ["Shen Li <dustet@gmail.com>"]
 license = "MIT"
 
 [tool.poetry.dependencies]
-python = ">3.6,<4"
+python = ">=3.6,<4"
 hashids = ">=1.0.2"
 
 [tool.poetry.dev-dependencies]

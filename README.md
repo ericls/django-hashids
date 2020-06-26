@@ -1,4 +1,9 @@
 # Django Hashids
+[![Github Actions](https://github.com/ericls/django-hashids/workflows/Build/badge.svg)](https://github.com/ericls/django-hashids/actions)
+[![Code Coverage](https://codecov.io/gh/ericls/django-hashids/branch/master/graph/badge.svg)](https://codecov.io/gh/ericls/django-hashids)
+[![Python Version](https://img.shields.io/pypi/pyversions/django-hashids.svg)](https://pypi.org/project/django-hashids/)
+[![PyPI Package](https://img.shields.io/pypi/v/django-hashids.svg)](https://pypi.org/project/django-hashids/)
+[![License](https://img.shields.io/pypi/l/django-hashids.svg)](https://github.com/ericls/django-hashids/blob/master/LICENSE)
 
 django-hashids is a simple and non-intrusive hashids library for Django. It acts as a model field, but it does not touch the database or change the model.
 
@@ -7,6 +12,8 @@ django-hashids is a simple and non-intrusive hashids library for Django. It acts
 ```bash
 pip install django-hashids
 ```
+
+`django-hashids` is tested with Django 1.11, 2.2, 3.0 and python 3.6, 3.7, 3.8.
 
 # Usage
 
