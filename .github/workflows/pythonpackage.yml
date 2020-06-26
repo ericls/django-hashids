@@ -25,7 +25,7 @@ jobs:
           poetry install
       - name: Setup Django ${{ matrix.django-version }}
         run: |
-          poetry add django==${{ matrix.django-version }}
+          poetry run pip install django==${{ matrix.django-version }}
       - name: Lint with flake
         run: |
           poetry run flake8 django_hashids
