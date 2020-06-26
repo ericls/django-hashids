@@ -70,7 +70,7 @@ class HashidsField(Field):
     def get_prep_value(self, value):
         return self.hashids_instance.decode(value)[0]
 
-    def from_db_value(self, value, expression, connection):
+    def from_db_value(self, value, expression, connection, *args):
         return self.hashids_instance.encode(value)
 
     def get_col(self, alias, output_field=None):
