@@ -62,9 +62,13 @@ class HashidsField(Field):
         if salt is None:
             salt = getattr(settings, "DJANGO_HASHIDS_SALT")
         if min_length is None:
-            min_length = self.MIN_LENGTH
+            min_length = (
+                getattr(settings, "DJANGO_HASHIDS_MIN_LENGTH", None) or self.MIN_LENGTH
+            )
         if alphabet is None:
-            alphabet = self.ALPHABET
+            alphabet = (
+                getattr(settings, "DJANGO_HASHIDS_ALPHABET", None) or self.ALPHABET
+            )
         return Hashids(salt=salt, min_length=min_length, alphabet=alphabet)
 
     def get_prep_value(self, value):

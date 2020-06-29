@@ -2,6 +2,7 @@ import os
 
 import pytest
 from django import setup
+from django.test import override_settings
 from django.db.models import ExpressionWrapper, F, IntegerField
 from hashids import Hashids
 
@@ -151,3 +152,22 @@ def test_can_select_as_integer():
         ).values_list("hid", flat=True)
     )
     assert set([instance.id, instance2.id]) == set(integer_ids)
+
+@override_settings(DJANGO_HASHIDS_MIN_LENGTH=10)
+def test_can_use_min_length_from_settings():
+    from tests.test_app.models import TestModel
+    TestModel.hashid.hashids_instance = None
+    TestModel.hashid.hashids_instance = TestModel.hashid.get_hashid_instance()
+
+    instance = TestModel.objects.create()
+    assert len(instance.hashid) >= 10
+
+
+@override_settings(DJANGO_HASHIDS_ALPHABET='!@#$%^&*(){}[]:"')
+def test_can_use_min_length_from_settings():
+    from tests.test_app.models import TestModel
+    TestModel.hashid.hashids_instance = None
+    TestModel.hashid.hashids_instance = TestModel.hashid.get_hashid_instance()
+
+    instance = TestModel.objects.create()
+    assert all(c in '!@#$%^&*(){}[]:"' for c in instance.hashid)

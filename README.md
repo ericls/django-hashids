@@ -46,13 +46,16 @@ TestModel.objects.filter(hashid__gt="1Z")  # same as id__gt=1, would return inst
 
 # Allows usage in queryset.values
 TestModel.objects.values_list("hashid", flat=True) # ["1Z", "4x"]
-TestModel.objects.filter(hashid__in=TestModel.objects.values("hashids"))
+TestModel.objects.filter(hashid__in=TestModel.objects.values("hashid"))
 
 ```
 
 ## Config
 
-`DJANGO_HASHIDS_SALT` can be set in Django's settinigs to be used as the default salt.
+The folloing attributes can be added in settings file to set default arguments of `HashidsField`:
+1. `DJANGO_HASHIDS_SALT`: default salt
+2. `DJANGO_HASHIDS_MIN_LENGTH`: default minimum length
+3. `DJANGO_HASHIDS_ALPHABET`: default alphabet
 
 `HashidsField` does not reqiure any arguments but the followinig arguments can be supplied to modify its behavior.
 
