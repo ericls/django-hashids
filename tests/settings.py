@@ -1,6 +1,8 @@
 SECRET_KEY = "1"
 DEBUG = True
 INSTALLED_APPS = [
+    "django.contrib.contenttypes",
+    "django.contrib.auth",
     "tests.test_app",
 ]
 MIDDLEWARE = []

@@ -34,7 +34,7 @@ class HashidsField(Field):
         self.attname = name
         self.name = name
         self.model = cls
-        self.column = ""
+        self.column = None
 
         if self.verbose_name is None:
             self.verbose_name = self.name
@@ -92,7 +92,10 @@ class HashidsField(Field):
     def __get__(self, instance, name=None):
         if not instance:
             return self
-        real_value = getattr(instance, self.real_field_name)
+        real_value = getattr(instance, self.real_field_name, None)
+        # the instance is not saved yet?
+        if real_value is None:
+            return ""
         assert isinstance(real_value, int)
         return self.hashids_instance.encode(real_value)
 

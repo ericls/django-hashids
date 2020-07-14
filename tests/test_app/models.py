@@ -1,3 +1,5 @@
+from django.contrib.auth.models import AbstractUser
+from django.db import models
 from django.db.models import Model
 from hashids import Hashids
 
@@ -17,3 +19,7 @@ this_hashids_instance = Hashids(salt="FOO")
 
 class TestModelWithOwnInstance(Model):
     hashid = HashidsField(hashids_instance=this_hashids_instance)
+
+
+class TestUser(AbstractUser):
+    hashid = HashidsField(real_field_name="id")
