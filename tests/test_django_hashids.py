@@ -106,6 +106,24 @@ def test_can_use_in_lookup():
     assert set([instance, instance2]) == set(qs)
 
 
+def test_can_use_lookup_when_value_does_not_exists():
+    # https://github.com/ericls/django-hashids/issues/4
+    from tests.test_app.models import TestModel
+
+    # exact lookup
+    instance = TestModel.objects.create()
+    hashid = instance.hashid + 'A'
+    qs = TestModel.objects.filter(hashid=hashid)
+    assert list(qs) == []
+    
+    # lookup
+    instance = TestModel.objects.create()
+    instance2 = TestModel.objects.create()
+    hashids = [instance.hashid + 'A', instance2.hashid + 'A']
+    qs = TestModel.objects.filter(hashid__in=hashids)
+    assert list(qs) == []
+
+
 def test_can_use_lt_gt_lte_gte_lookup():
     from tests.test_app.models import TestModel
 
