@@ -72,7 +72,10 @@ class HashidsField(Field):
         return Hashids(salt=salt, min_length=min_length, alphabet=alphabet)
 
     def get_prep_value(self, value):
-        return self.hashids_instance.decode(value)[0]
+        try:
+            return self.hashids_instance.decode(value)[0]
+        except IndexError:
+            return ''
 
     def from_db_value(self, value, expression, connection, *args):
         return self.hashids_instance.encode(value)
