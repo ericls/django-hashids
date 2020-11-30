@@ -1,3 +1,5 @@
+import string
+
 from django.conf import settings
 from django.db.models import Field
 from django.utils.functional import cached_property
@@ -10,7 +12,7 @@ class HashidsField(Field):
     concrete = False
     allowed_lookups = ("exact", "iexact", "in", "gt", "gte", "lt", "lte")
     # these should never change, even when Hashids updates
-    ALPHABET = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890"
+    ALPHABET = "{}{}{}".format(string.ascii_lowercase, string.ascii_uppercase, string.digits)
     MIN_LENGTH = 0
 
     def __init__(
