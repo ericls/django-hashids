@@ -12,7 +12,7 @@ class HashidsField(Field):
     concrete = False
     allowed_lookups = ("exact", "iexact", "in", "gt", "gte", "lt", "lte")
     # these should never change, even when Hashids updates
-    ALPHABET = "{}{}{}".format(string.ascii_lowercase, string.ascii_uppercase, string.digits)
+    ALPHABET = string.ascii_lowercase + string.ascii_uppercase + string.digits
     MIN_LENGTH = 0
 
     def __init__(
