@@ -23,7 +23,7 @@ class HashidsField(Field):
         min_length=None,
         **kwargs
     ):
-        super().__init__(*args, **kwargs)
+        super().__init__(*args, editable=False, **kwargs)
         self.real_field_name = real_field_name
         self.hashids_instance = hashids_instance
         self.salt = salt
