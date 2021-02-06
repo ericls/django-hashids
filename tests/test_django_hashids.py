@@ -77,14 +77,6 @@ def test_updates_when_changing_real_column_value():
     assert hashids_instance.decode(instance.hashid)[0] == 3
 
 
-def test_throws_trying_to_modify():
-    from tests.test_app.models import TestModel
-
-    instance = TestModel.objects.create()
-    with pytest.raises(AttributeError):
-        instance.hashid = "FOO"
-
-
 def test_can_use_exact_lookup():
     from tests.test_app.models import TestModel
 
