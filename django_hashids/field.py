@@ -1,5 +1,3 @@
-import warnings
-
 from django.conf import settings
 from django.db.models import Field
 from django.utils.functional import cached_property
@@ -25,7 +23,7 @@ class HashidsField(Field):
         min_length=None,
         **kwargs
     ):
-        super().__init__(*args, editable=False, blank=True, **kwargs)
+        super().__init__(*args, editable=False, **kwargs)
         self.real_field_name = real_field_name
         self.hashids_instance = hashids_instance
         self.salt = salt
@@ -105,10 +103,7 @@ class HashidsField(Field):
         return self.hashids_instance.encode(real_value)
 
     def __set__(self, instance, value):
-        warnings.warn(
-            UserWarning("HashidsField is read only"),
-            stacklevel=2,
-        )
+        pass
 
     @classmethod
     def get_lookups(cls):
