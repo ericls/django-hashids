@@ -78,6 +78,7 @@ def test_updates_when_changing_real_column_value():
 
 
 def test_ignores_changes_to_value():
+    from django.conf import settings
     from tests.test_app.models import TestModel
 
     instance = TestModel.objects.create()
