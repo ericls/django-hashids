@@ -30,7 +30,7 @@ class HashidsField(Field):
         self.salt = salt
         self.min_length = min_length
         self.alphabet = alphabet
-        # If private_only is True, create a separate instance of this field 
+        # If private_only is True, create a separate instance of this field
         # for every subclass of cls, even if cls is not an abstract model.
         self.private_only = private_only
 
