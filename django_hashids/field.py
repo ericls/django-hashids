@@ -21,6 +21,7 @@ class HashidsField(Field):
         salt=None,
         alphabet=None,
         min_length=None,
+        private_only=True,
         **kwargs
     ):
         super().__init__(*args, editable=False, **kwargs)
@@ -29,6 +30,9 @@ class HashidsField(Field):
         self.salt = salt
         self.min_length = min_length
         self.alphabet = alphabet
+        # If private_only is True, create a separate instance of this field 
+        # for every subclass of cls, even if cls is not an abstract model.
+        self.private_only = private_only
 
     def contribute_to_class(self, cls, name):
         self.attname = name
@@ -41,7 +45,7 @@ class HashidsField(Field):
 
         setattr(cls, name, self)
 
-        cls._meta.add_field(self, private=True)
+        cls._meta.add_field(self, private=self.private_only)
 
         self.hashids_instance = self.get_hashid_instance()
 
