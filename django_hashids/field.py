@@ -103,7 +103,7 @@ class HashidsField(Field):
         return self.hashids_instance.encode(real_value)
 
     def __set__(self, instance, value):
-        raise AttributeError("HashidsField is read only")
+        pass
 
     @classmethod
     def get_lookups(cls):

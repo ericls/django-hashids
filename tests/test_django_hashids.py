@@ -77,12 +77,22 @@ def test_updates_when_changing_real_column_value():
     assert hashids_instance.decode(instance.hashid)[0] == 3
 
 
-def test_throws_trying_to_modify():
+def test_ignores_changes_to_value():
+    from django.conf import settings
     from tests.test_app.models import TestModel
 
     instance = TestModel.objects.create()
-    with pytest.raises(AttributeError):
-        instance.hashid = "FOO"
+    instance.id = 3
+    instance.hashid = "FOO"
+
+    hashids_instance = Hashids(salt=settings.DJANGO_HASHIDS_SALT)
+    assert hashids_instance.decode(instance.hashid)[0] == 3
+    # works after saving
+    instance.save()
+
+    instance.hashid = "FOO"
+    hashids_instance = Hashids(salt=settings.DJANGO_HASHIDS_SALT)
+    assert hashids_instance.decode(instance.hashid)[0] == 3
 
 
 def test_can_use_exact_lookup():
