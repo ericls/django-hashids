@@ -89,7 +89,8 @@ class HashidsField(Field):
     @cached_property
     def real_col(self):
         return next(
-            col for col in self.model._meta.fields if col.name == self.real_field_name
+            col for col in self.model._meta.fields
+            if col.name == self.real_field_name or col.attname == self.real_field_name
         )
 
     def __get__(self, instance, name=None):
