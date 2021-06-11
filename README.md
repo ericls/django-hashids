@@ -13,7 +13,7 @@ django-hashids is a simple and non-intrusive hashids library for Django. It acts
 pip install django-hashids
 ```
 
-`django-hashids` is tested with Django 1.11, 2.2, 3.0, 3.1 and python 3.6, 3.7, 3.8, 3.9.
+`django-hashids` is tested with Django 1.11, 2.2, 3.0, 3.1, 3.2 and python 3.6, 3.7, 3.8, 3.9.
 
 # Usage
 
