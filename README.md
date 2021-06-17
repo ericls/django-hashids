@@ -7,6 +7,17 @@
 
 django-hashids is a simple and non-intrusive hashids library for Django. It acts as a model field, but it does not touch the database or change the model.
 
+# Features
+- Proxy the internal model `pk` field without storing the value in the database.
+- Allows lookups and filtering by hashid string.
+- Can be used as sort key
+- Allows specifying a salt, min_length and alphabet globally
+- Supports custom salt, min_length, and alphabet per field
+- Supports Django REST Framework Serializers
+- Supports exact ID searches in Django Admin when field is specified in search_fields.
+- Supports common filtering lookups, such as __iexact, __contains, __icontains, though matching is the same as __exact.
+- Supports other lookups: isnull, gt, gte, lt and lte.
+
 # Install
 
 ```bash
