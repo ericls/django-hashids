@@ -35,7 +35,8 @@ def test_can_use_per_field_config():
 
     instance = TestModelWithDifferentConfig.objects.create()
     hashid = instance.hashid
-    hashids_instance = Hashids(salt="AAA", min_length=5, alphabet="OPQRST1234567890")
+    hashids_instance = Hashids(
+        salt="AAA", min_length=5, alphabet="OPQRST1234567890")
     assert hashids_instance.decode(hashid)[0] == instance.pk
 
 
@@ -125,7 +126,7 @@ def test_can_use_lookup_when_value_does_not_exists():
     hashid = instance.hashid + 'A'
     qs = TestModel.objects.filter(hashid=hashid)
     assert list(qs) == []
-    
+
     # lookup
     instance = TestModel.objects.create()
     instance2 = TestModel.objects.create()
@@ -165,7 +166,8 @@ def test_can_get_values():
     )
     # assert id field still works
     ids = list(TestModel.objects.values_list("id", flat=True))
-    assert set([instance, instance2]) == set(TestModel.objects.filter(id__in=ids))
+    assert set([instance, instance2]) == set(
+        TestModel.objects.filter(id__in=ids))
 
 
 def test_can_select_as_integer():
@@ -217,3 +219,13 @@ def test_create_user():
 
     u = TestUser.objects.create_user("username", password="password")
     assert TestUser.hashid.hashids_instance.decode(u.hashid)[0] == u.id
+
+
+def test_model_inheritance():
+    from tests.test_app.models import InheritanceModel, InheritanceModel2
+
+    instance = InheritanceModel.objects.create()
+    InheritanceModel.objects.filter(hashid=instance.hashid).get() == instance
+
+    instance2 = InheritanceModel2.objects.create()
+    InheritanceModel2.objects.filter(hashid=instance2.hashid).get() == instance2

@@ -1,5 +1,4 @@
 from django.contrib.auth.models import AbstractUser
-from django.db import models
 from django.db.models import Model
 from hashids import Hashids
 
@@ -23,3 +22,17 @@ class TestModelWithOwnInstance(Model):
 
 class TestUser(AbstractUser):
     hashid = HashidsField(real_field_name="id")
+
+
+class TestBase(Model):
+    class Meta:
+        abstract = True
+
+    hashid =  HashidsField()
+
+
+class InheritanceModel(TestBase):
+    hashid =  HashidsField(min_length=20)
+
+class InheritanceModel2(TestBase):
+    pass
