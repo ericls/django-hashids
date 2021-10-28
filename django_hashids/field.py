@@ -8,7 +8,7 @@ from .exceptions import ConfigError
 
 class HashidsField(Field):
     concrete = False
-    allowed_lookups = ("exact", "iexact", "in", "gt", "gte", "lt", "lte")
+    allowed_lookups = ("exact", "iexact", "in", "gt", "gte", "lt", "lte", "isnull")
     # these should never change, even when Hashids updates
     ALPHABET = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890"
     MIN_LENGTH = 0
@@ -72,10 +72,10 @@ class HashidsField(Field):
         return Hashids(salt=salt, min_length=min_length, alphabet=alphabet)
 
     def get_prep_value(self, value):
-        try:
-            return self.hashids_instance.decode(value)[0]
-        except IndexError:
-            return ''
+        decoded_values = self.hashids_instance.decode(value)
+        if not decoded_values:
+            return None
+        return decoded_values[0]
 
     def from_db_value(self, value, expression, connection, *args):
         return self.hashids_instance.encode(value)
