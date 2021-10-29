@@ -75,7 +75,7 @@ class HashidsField(Field):
         try:
             return self.hashids_instance.decode(value)[0]
         except IndexError:
-            return ''
+            return ""
 
     def from_db_value(self, value, expression, connection, *args):
         return self.hashids_instance.encode(value)
@@ -89,7 +89,8 @@ class HashidsField(Field):
     @cached_property
     def real_col(self):
         return next(
-            col for col in self.model._meta.fields
+            col
+            for col in self.model._meta.fields
             if col.name == self.real_field_name or col.attname == self.real_field_name
         )
 

@@ -35,8 +35,7 @@ def test_can_use_per_field_config():
 
     instance = TestModelWithDifferentConfig.objects.create()
     hashid = instance.hashid
-    hashids_instance = Hashids(
-        salt="AAA", min_length=5, alphabet="OPQRST1234567890")
+    hashids_instance = Hashids(salt="AAA", min_length=5, alphabet="OPQRST1234567890")
     assert hashids_instance.decode(hashid)[0] == instance.pk
 
 
@@ -123,14 +122,14 @@ def test_can_use_lookup_when_value_does_not_exists():
 
     # exact lookup
     instance = TestModel.objects.create()
-    hashid = instance.hashid + 'A'
+    hashid = instance.hashid + "A"
     qs = TestModel.objects.filter(hashid=hashid)
     assert list(qs) == []
 
     # lookup
     instance = TestModel.objects.create()
     instance2 = TestModel.objects.create()
-    hashids = [instance.hashid + 'A', instance2.hashid + 'A']
+    hashids = [instance.hashid + "A", instance2.hashid + "A"]
     qs = TestModel.objects.filter(hashid__in=hashids)
     assert list(qs) == []
 
@@ -166,8 +165,7 @@ def test_can_get_values():
     )
     # assert id field still works
     ids = list(TestModel.objects.values_list("id", flat=True))
-    assert set([instance, instance2]) == set(
-        TestModel.objects.filter(id__in=ids))
+    assert set([instance, instance2]) == set(TestModel.objects.filter(id__in=ids))
 
 
 def test_can_select_as_integer():
@@ -229,3 +227,14 @@ def test_model_inheritance():
 
     instance2 = InheritanceModel2.objects.create()
     InheritanceModel2.objects.filter(hashid=instance2.hashid).get() == instance2
+
+
+def test_django_polymorphic():
+    from tests.test_app.polymorphic_models import Project, ArtProject, ResearchProject
+
+    # p = Project.objects.create()
+    # assert Project.objects.filter(hashid=p.hashid).get() == p
+
+    a = ArtProject.objects.create()
+    assert ArtProject.objects.filter(hashid=a.hashid).get() == a
+    

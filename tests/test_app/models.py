@@ -28,11 +28,15 @@ class TestBase(Model):
     class Meta:
         abstract = True
 
-    hashid =  HashidsField()
+    hashid = HashidsField()
 
 
 class InheritanceModel(TestBase):
-    hashid =  HashidsField(min_length=20)
+    hashid = HashidsField(min_length=20)
+
 
 class InheritanceModel2(TestBase):
     pass
+
+
+from .polymorphic_models import *
