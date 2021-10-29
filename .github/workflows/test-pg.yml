@@ -44,7 +44,10 @@ jobs:
           python-version: ${{ matrix.python-version }}
       - name: Install tooling
         run: |
-          python -mpip install poetry codecov psycopg2-binary
+          python -mpip install poetry codecov
+      - name: Install psycopg2
+        run: |
+          poetry add psycopg2-binary
       - name: Install dependencies
         run: |
           poetry install
