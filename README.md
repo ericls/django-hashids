@@ -31,6 +31,8 @@ pip install django-hashids
 Add `HashidsField` to any model
 
 ```python
+from django_hashids import HashidsField
+
 class TestModel(Model):
     hashid = HashidsField(real_field_name="id")
 ```
