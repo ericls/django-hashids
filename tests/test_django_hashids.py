@@ -122,14 +122,14 @@ def test_can_use_lookup_when_value_does_not_exists():
 
     # exact lookup
     instance = TestModel.objects.create()
-    hashid = instance.hashid + 'A'
+    hashid = instance.hashid + "A"
     qs = TestModel.objects.filter(hashid=hashid)
     assert list(qs) == []
-    
+
     # lookup
     instance = TestModel.objects.create()
     instance2 = TestModel.objects.create()
-    hashids = [instance.hashid + 'A', instance2.hashid + 'A']
+    hashids = [instance.hashid + "A", instance2.hashid + "A"]
     qs = TestModel.objects.filter(hashid__in=hashids)
     assert list(qs) == []
 
@@ -217,3 +217,18 @@ def test_create_user():
 
     u = TestUser.objects.create_user("username", password="password")
     assert TestUser.hashid.hashids_instance.decode(u.hashid)[0] == u.id
+
+
+def test_multiple_level_inheritance():
+    # https://github.com/ericls/django-hashids/issues/25
+    from tests.test_app.models import SecondSubClass, FirstSubClass
+
+    instance = SecondSubClass.objects.create()
+    SecondSubClass.objects.filter(id=1).first() == SecondSubClass.objects.filter(
+        hashid=instance.hashid
+    ).first()
+
+    instance = FirstSubClass.objects.create()
+    FirstSubClass.objects.filter(id=1).first() == FirstSubClass.objects.filter(
+        hashid=instance.hashid
+    ).first()

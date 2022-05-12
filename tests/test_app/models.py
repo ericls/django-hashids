@@ -23,3 +23,11 @@ class TestModelWithOwnInstance(Model):
 
 class TestUser(AbstractUser):
     hashid = HashidsField(real_field_name="id")
+
+
+class FirstSubClass(TestModel):
+    pass
+
+
+class SecondSubClass(FirstSubClass):
+    pass
