@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "django-hashids"
-version = "0.5.0"
+version = "0.6.0"
 readme = "README.md"
 description = "Non-intrusive hashids library for Django"
 authors = ["Shen Li <dustet@gmail.com>"]
