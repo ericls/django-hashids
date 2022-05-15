@@ -1,4 +1,5 @@
 from django.conf import settings
+from django.core.exceptions import FieldError
 from django.db.models import Field
 from django.utils.functional import cached_property
 from hashids import Hashids
@@ -23,17 +24,31 @@ class HashidsField(Field):
         min_length=None,
         **kwargs
     ):
+        kwargs.pop("editable", None)
         super().__init__(*args, editable=False, **kwargs)
         self.real_field_name = real_field_name
-        self.hashids_instance = hashids_instance
         self.salt = salt
         self.min_length = min_length
         self.alphabet = alphabet
+        self._explicit_hashids_instance = hashids_instance
+
+        self.hashids_instance = None
+        self.attached_to_model = None
 
     def contribute_to_class(self, cls, name):
         self.attname = name
         self.name = name
-        self.model = cls
+
+        if getattr(self, "model", None) is None:
+            self.model = cls
+
+        if self.attached_to_model is not None:  # pragma: no cover
+            raise FieldError(
+                "Field '%s' is already attached to another model(%s)."
+                % (self.name, self.attached_to_model)
+            )
+        self.attached_to_model = cls
+
         self.column = None
 
         if self.verbose_name is None:
@@ -46,7 +61,7 @@ class HashidsField(Field):
         self.hashids_instance = self.get_hashid_instance()
 
     def get_hashid_instance(self):
-        if self.hashids_instance:
+        if self._explicit_hashids_instance:
             if (
                 self.salt is not None
                 or self.alphabet is not None
@@ -55,7 +70,7 @@ class HashidsField(Field):
                 raise ConfigError(
                     "if hashids_instance is set, salt, min_length and alphabet should not be set"
                 )
-            return self.hashids_instance
+            return self._explicit_hashids_instance
         salt = self.salt
         min_length = self.min_length
         alphabet = self.alphabet
@@ -90,7 +105,7 @@ class HashidsField(Field):
     def real_col(self):
         return next(
             col
-            for col in self.model._meta.fields
+            for col in self.attached_to_model._meta.fields
             if col.name == self.real_field_name or col.attname == self.real_field_name
         )
 
@@ -106,6 +121,17 @@ class HashidsField(Field):
 
     def __set__(self, instance, value):
         pass
+
+    def __deepcopy__(self, memo=None):
+        new_instance = super().__deepcopy__(memo)
+        new_instance.real_col
+        for attr in ("hashids_instance", "attached_to_model"):
+            if hasattr(new_instance, attr):
+                setattr(new_instance, attr, None)
+        for key in ("real_col",):
+            if key in new_instance.__dict__:
+                del new_instance.__dict__[key]
+        return new_instance
 
     @classmethod
     def get_lookups(cls):
