@@ -31,3 +31,18 @@ class FirstSubClass(TestModel):
 
 class SecondSubClass(FirstSubClass):
     pass
+
+
+class TestAbstractModel(models.Model):
+    hashid = HashidsField(real_field_name="id")
+
+    class Meta:
+        abstract = True
+
+
+class ModelA(TestAbstractModel):
+    pass
+
+
+class ModelB(ModelA):
+    pass

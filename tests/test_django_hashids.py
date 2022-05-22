@@ -232,3 +232,18 @@ def test_multiple_level_inheritance():
     FirstSubClass.objects.filter(id=1).first() == FirstSubClass.objects.filter(
         hashid=instance.hashid
     ).first()
+
+
+def test_multiple_level_inheritance_from_abstract_model():
+    # https://github.com/ericls/django-hashids/issues/25
+    from tests.test_app.models import ModelB, ModelA
+
+    instance = ModelB.objects.create()
+    ModelB.objects.filter(id=1).first() == ModelB.objects.filter(
+        hashid=instance.hashid
+    ).first()
+
+    instance = ModelA.objects.create()
+    ModelA.objects.filter(id=1).first() == ModelA.objects.filter(
+        hashid=instance.hashid
+    ).first()
