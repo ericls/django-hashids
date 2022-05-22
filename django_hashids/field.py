@@ -39,7 +39,7 @@ class HashidsField(Field):
         self.attname = name
         self.name = name
 
-        if getattr(self, "model", None) is None:
+        if getattr(self, "model", None) is None and cls._meta.abstract is False:
             self.model = cls
 
         if self.attached_to_model is not None:  # pragma: no cover
@@ -124,13 +124,13 @@ class HashidsField(Field):
 
     def __deepcopy__(self, memo=None):
         new_instance = super().__deepcopy__(memo)
-        new_instance.real_col
         for attr in ("hashids_instance", "attached_to_model"):
             if hasattr(new_instance, attr):
                 setattr(new_instance, attr, None)
+        # remove cached values from cached_property
         for key in ("real_col",):
             if key in new_instance.__dict__:
-                del new_instance.__dict__[key]
+                del new_instance.__dict__[key]  # pragma: no cover
         return new_instance
 
     @classmethod
