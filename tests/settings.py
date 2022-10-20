@@ -36,5 +36,9 @@ elif os.environ.get("TEST_WITH_MYSQL"):
             "PASSWORD": os.environ["MYSQL_PASSWORD"],
             "HOST": os.environ["MYSQL_HOST"],
             "PORT": "3306",
+            "TEST": {
+                # the main database is also the test database
+                "NAME": os.environ["MYSQL_DATABASE"],
+            },
         }
     }
