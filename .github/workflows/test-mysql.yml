@@ -33,6 +33,7 @@ jobs:
         ports: ['3306:3306']
         env:
           MYSQL_PASSWORD: mysql
+          MYSQL_ROOT_PASSWORD: mysql
           MYSQL_USER: mysql
           MYSQL_DATABASE: test_db
         options: >-
