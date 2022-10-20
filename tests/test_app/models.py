@@ -25,6 +25,12 @@ class TestUser(AbstractUser):
     hashid = HashidsField(real_field_name="id")
 
 
+class TestUserRelated(Model):
+    hashid = HashidsField(real_field_name="id")
+
+    user = models.ForeignKey("TestUser", related_name="related", on_delete=models.CASCADE)
+
+
 class FirstSubClass(TestModel):
     pass
 

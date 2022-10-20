@@ -247,3 +247,14 @@ def test_multiple_level_inheritance_from_abstract_model():
     ModelA.objects.filter(id=1).first() == ModelA.objects.filter(
         hashid=instance.hashid
     ).first()
+
+
+def test_related_queries():
+
+    from tests.test_app.models import TestUser, TestUserRelated
+
+    u = TestUser.objects.create()
+    r = TestUserRelated.objects.create(user=u)
+
+    assert TestUserRelated.objects.filter(user__hashid=u.hashid).first() == r
+    assert TestUser.objects.filter(related__hashid=r.hashid).first() == u
