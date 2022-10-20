@@ -9,7 +9,7 @@ on:
       - main
 
 jobs:
-  test-pg:
+  test-mysql:
     runs-on: ubuntu-latest
     strategy:
       max-parallel: 4
@@ -23,7 +23,7 @@ jobs:
     env:
       MYSQL_PASSWORD: mysql
       MYSQL_USER: mysql
-      MYSQL_DB: mysql
+      MYSQL_DATABASE: test_db
       MYSQL_HOST: 127.0.0.1
       TEST_WITH_MYSQL: true
 
@@ -34,11 +34,11 @@ jobs:
         env:
           MYSQL_PASSWORD: mysql
           MYSQL_USER: mysql
-          MYSQL_DB: mysql
+          MYSQL_DATABASE: test_db
         options: >-
           --health-cmd "mysqladmin ping -h localhost"
           --health-interval 10s
-          --health-timeout 5s
+          --health-timeout 10s
           --health-retries 5
 
     steps:
