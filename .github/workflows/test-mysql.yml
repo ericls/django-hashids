@@ -1,4 +1,4 @@
-name: test
+name: test-mysql
 
 on:
   push:
@@ -9,16 +9,39 @@ on:
       - main
 
 jobs:
-  test:
+  test-mysql:
     runs-on: ubuntu-latest
     strategy:
       max-parallel: 4
       matrix:
-        python-version: ["3.6", "3.7", "3.8", "3.9"]
-        django-version: ["1.11.29", "2.2.13", "3.0.7", "3.1.2", "3.2.4"]
+        python-version: [3.9]
+        django-version: [2.2.13, 3.0.7, 3.1.2, 3.2.4]
         include:
           - python-version: "3.10"
             django-version: "4.0.4"
+
+    env:
+      MYSQL_PASSWORD: mysql
+      MYSQL_USER: mysql
+      MYSQL_DATABASE: test_db
+      MYSQL_HOST: 127.0.0.1
+      TEST_WITH_MYSQL: true
+
+    services:
+      mysql:
+        image: mysql
+        ports: ['3306:3306']
+        env:
+          MYSQL_PASSWORD: mysql
+          MYSQL_ROOT_PASSWORD: mysql
+          MYSQL_USER: mysql
+          MYSQL_DATABASE: test_db
+        options: >-
+          --health-cmd "mysqladmin ping"
+          --health-interval 10s
+          --health-timeout 10s
+          --health-retries 5
+
     steps:
       - uses: actions/checkout@v1
       - name: Set up Python ${{ matrix.python-version }}
@@ -27,7 +50,10 @@ jobs:
           python-version: ${{ matrix.python-version }}
       - name: Install tooling
         run: |
-          python -mpip install poetry codecov; python -mpip install six
+          python -mpip install poetry codecov
+      - name: Install mysqlclient
+        run: |
+          poetry add mysqlclient
       - name: Install dependencies
         run: |
           poetry install
@@ -39,7 +65,7 @@ jobs:
           poetry run flake8 django_hashids
       - name: Test with pytest
         run: |
-          poetry run py.test --cov=./django_hashids/
+          poetry run py.test --cov=./django_hashids/ --no-migrations
       - name: Upload coverage to codecov
         run: |
           codecov

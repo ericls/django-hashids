@@ -10,7 +10,12 @@ INSTALLED_APPS = [
 MIDDLEWARE = []
 ROOT_URLCONF = "tests.urls"
 DJANGO_HASHIDS_SALT = "???!"
-DATABASES = {"default": {"ENGINE": "django.db.backends.sqlite3", "NAME": ":memory:",}}
+DATABASES = {
+    "default": {
+        "ENGINE": "django.db.backends.sqlite3",
+        "NAME": ":memory:",
+    }
+}
 if os.environ.get("TEST_WITH_PG"):
     DATABASES = {
         "default": {
@@ -20,5 +25,20 @@ if os.environ.get("TEST_WITH_PG"):
             "PASSWORD": os.environ["POSTGRES_PASSWORD"],
             "HOST": os.environ["POSTGRES_HOST"],
             "PORT": "5432",
+        }
+    }
+elif os.environ.get("TEST_WITH_MYSQL"):
+    DATABASES = {
+        "default": {
+            "ENGINE": "django.db.backends.mysql",
+            "NAME": os.environ["MYSQL_DATABASE"],
+            "USER": os.environ["MYSQL_USER"],
+            "PASSWORD": os.environ["MYSQL_PASSWORD"],
+            "HOST": os.environ["MYSQL_HOST"],
+            "PORT": "3306",
+            "TEST": {
+                # the main database is also the test database
+                "NAME": os.environ["MYSQL_DATABASE"],
+            },
         }
     }
