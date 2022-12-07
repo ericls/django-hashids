@@ -1,8 +1,11 @@
 [tool.poetry]
 name = "django-hashids"
-version = "0.6.5"
+version = "0.7.0"
 readme = "README.md"
 description = "Non-intrusive hashids library for Django"
+homepage = "https://github.com/ericls/django-hashids"
+repository = "https://github.com/ericls/django-hashids"
+keywords = ["django", "hashids", "hashid"]
 authors = ["Shen Li <dustet@gmail.com>"]
 license = "MIT"
 
