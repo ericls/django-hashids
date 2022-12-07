@@ -4,7 +4,7 @@ from django.db.models import Field
 from django.utils.functional import cached_property
 from hashids import Hashids
 
-from .exceptions import ConfigError
+from .exceptions import ConfigError, RealFieldDoesNotExistError
 
 
 class HashidsField(Field):
@@ -115,8 +115,8 @@ class HashidsField(Field):
                 or col.attname == self.real_field_name
             )
         except StopIteration:
-            raise ValueError(
-                "%s(%s) can't find field with real_field_name: %s"
+            raise RealFieldDoesNotExistError(
+                "%s(%s) can't find real field using real_field_name: %s"
                 % (self.__class__.__name__, self, self.real_field_name)
             )
         return field
