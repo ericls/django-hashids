@@ -52,3 +52,7 @@ class ModelA(TestAbstractModel):
 
 class ModelB(ModelA):
     pass
+
+
+class ModelUsingPKAsRealFieldName(Model):
+    hashid = HashidsField(real_field_name="pk")

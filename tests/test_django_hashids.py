@@ -258,3 +258,17 @@ def test_related_queries():
 
     assert TestUserRelated.objects.filter(user__hashid=u.hashid).first() == r
     assert TestUser.objects.filter(related__hashid=r.hashid).first() == u
+
+
+def test_using_pk_as_real_field_name():
+    # https://github.com/ericls/django-hashids/issues/31
+    from tests.test_app.models import ModelUsingPKAsRealFieldName
+
+    a = ModelUsingPKAsRealFieldName.objects.create()
+    assert a.hashid
+    assert ModelUsingPKAsRealFieldName.objects.get(hashid=a.hashid) == a
+    assert ModelUsingPKAsRealFieldName.objects.get(hashid__lte=a.hashid) == a
+    assert (
+        ModelUsingPKAsRealFieldName.objects.filter(hashid__lt=a.hashid).exists()
+        is False
+    )
