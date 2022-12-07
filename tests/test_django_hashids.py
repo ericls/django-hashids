@@ -6,7 +6,7 @@ from django.db.models import ExpressionWrapper, F, IntegerField
 from django.test import override_settings
 from hashids import Hashids
 
-from django_hashids.exceptions import ConfigError
+from django_hashids.exceptions import ConfigError, RealFieldDoesNotExistError
 
 os.environ["DJANGO_SETTINGS_MODULE"] = "tests.settings"
 setup()
@@ -258,3 +258,31 @@ def test_related_queries():
 
     assert TestUserRelated.objects.filter(user__hashid=u.hashid).first() == r
     assert TestUser.objects.filter(related__hashid=r.hashid).first() == u
+
+
+def test_using_pk_as_real_field_name():
+    # https://github.com/ericls/django-hashids/issues/31
+    from tests.test_app.models import ModelUsingPKAsRealFieldName
+
+    a = ModelUsingPKAsRealFieldName.objects.create()
+    assert a.hashid
+    assert ModelUsingPKAsRealFieldName.objects.get(hashid=a.hashid) == a
+    assert ModelUsingPKAsRealFieldName.objects.get(hashid__lte=a.hashid) == a
+    assert (
+        ModelUsingPKAsRealFieldName.objects.filter(hashid__lt=a.hashid).exists()
+        is False
+    )
+
+
+def test_no_real_field_error_message():
+    from django.db.models import Model
+    from django_hashids import HashidsField
+
+    class Foo(Model):
+        class Meta:
+            app_label = "tests.test_app"
+
+        hash_id = HashidsField(real_field_name="does_not_exist")
+
+    with pytest.raises(RealFieldDoesNotExistError):
+        Foo.objects.filter(hash_id="foo")

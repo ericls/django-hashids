@@ -4,7 +4,7 @@ from django.db.models import Field
 from django.utils.functional import cached_property
 from hashids import Hashids
 
-from .exceptions import ConfigError
+from .exceptions import ConfigError, RealFieldDoesNotExistError
 
 
 class HashidsField(Field):
@@ -103,11 +103,23 @@ class HashidsField(Field):
 
     @cached_property
     def real_col(self):
-        return next(
-            col
-            for col in self.attached_to_model._meta.fields
-            if col.name == self.real_field_name or col.attname == self.real_field_name
-        )
+        # `maybe_field` is intended for `pk`, which does not appear in `_meta.fields`
+        maybe_field = getattr(self.attached_to_model._meta, self.real_field_name, None)
+        if isinstance(maybe_field, Field):
+            return maybe_field
+        try:
+            field = next(
+                col
+                for col in self.attached_to_model._meta.fields
+                if col.name == self.real_field_name
+                or col.attname == self.real_field_name
+            )
+        except StopIteration:
+            raise RealFieldDoesNotExistError(
+                "%s(%s) can't find real field using real_field_name: %s"
+                % (self.__class__.__name__, self, self.real_field_name)
+            )
+        return field
 
     def __get__(self, instance, name=None):
         if not instance:
