@@ -1,5 +1,13 @@
 import os
 
+DRF_INSTALLED = False
+try:
+    import rest_framework
+except ImportError:
+    pass
+else:
+    DRF_INSTALLED = True
+
 SECRET_KEY = "1"
 DEBUG = True
 INSTALLED_APPS = [
@@ -7,6 +15,8 @@ INSTALLED_APPS = [
     "django.contrib.auth",
     "tests.test_app",
 ]
+if DRF_INSTALLED:
+    INSTALLED_APPS.append("rest_framework")
 MIDDLEWARE = []
 ROOT_URLCONF = "tests.urls"
 DJANGO_HASHIDS_SALT = "???!"

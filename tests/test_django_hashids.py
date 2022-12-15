@@ -193,15 +193,19 @@ def test_can_use_min_length_from_settings():
     assert len(instance.hashid) >= 10
 
 
-@override_settings(DJANGO_HASHIDS_ALPHABET='!@#$%^&*(){}[]:"')
 def test_can_use_min_length_from_settings():
-    from tests.test_app.models import TestModel
+    with override_settings(DJANGO_HASHIDS_ALPHABET='!@#$%^&*(){}[]:"'):
+        from tests.test_app.models import TestModel
+
+        TestModel.hashid.hashids_instance = None
+        TestModel.hashid.hashids_instance = TestModel.hashid.get_hashid_instance()
+
+        instance = TestModel.objects.create()
+    assert all(c in '!@#$%^&*(){}[]:"' for c in instance.hashid)
 
     TestModel.hashid.hashids_instance = None
     TestModel.hashid.hashids_instance = TestModel.hashid.get_hashid_instance()
-
-    instance = TestModel.objects.create()
-    assert all(c in '!@#$%^&*(){}[]:"' for c in instance.hashid)
+    
 
 
 def test_not_saved_instance():
