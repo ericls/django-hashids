@@ -63,6 +63,26 @@ TestModel.objects.filter(hashid__in=TestModel.objects.values("hashid"))
 
 ```
 
+## Using with URLs
+
+You can use hashids to identify items in your URLs by treating them as slugs.
+
+In `urls.py`:
+
+```python
+urlpatterns = [
+    path("item/<slug>/", YourDetailView.as_view(), name="item-detail"),
+]
+```
+
+And in your view:
+
+```python
+class YourDetailView(DetailView):
+    model = Item
+    slug_field = 'hashid'
+```
+
 ## Config
 
 The folloing attributes can be added in settings file to set default arguments of `HashidsField`:
