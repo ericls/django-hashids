@@ -14,11 +14,13 @@ jobs:
     strategy:
       max-parallel: 4
       matrix:
-        python-version: [3.9]
-        django-version: [2.2.13, 3.0.7, 3.1.2, 3.2.4]
+        python-version: [3.12]
+        django-version: [4.2.9, 5.0.1]
         include:
-          - python-version: "3.10"
-            django-version: "4.0.4"
+          - python-version: "3.9"
+            django-version: "2.2.13"
+          - python-version: "3.9"
+            django-version: "3.2.4"
 
     env:
       MYSQL_PASSWORD: mysql
@@ -30,7 +32,7 @@ jobs:
     services:
       mysql:
         image: mysql
-        ports: ['3306:3306']
+        ports: ["3306:3306"]
         env:
           MYSQL_PASSWORD: mysql
           MYSQL_ROOT_PASSWORD: mysql
@@ -51,18 +53,12 @@ jobs:
       - name: Install tooling
         run: |
           python -mpip install poetry codecov
-      - name: Install mysqlclient
-        run: |
-          poetry add mysqlclient
       - name: Install dependencies
         run: |
-          poetry install
+          poetry install --with testmysql,dev
       - name: Setup Django ${{ matrix.django-version }}
         run: |
           poetry run pip install django==${{ matrix.django-version }}
-      - name: Lint with flake
-        run: |
-          poetry run flake8 django_hashids
       - name: Test with pytest
         run: |
           poetry run py.test --cov=./django_hashids/ --no-migrations
